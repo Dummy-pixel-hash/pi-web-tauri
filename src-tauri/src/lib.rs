@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use std::process::Command;
 use std::sync::Mutex;
-use tauri::{Manager, State, command};
+use tauri::{Manager, State, WebviewUrl, WebviewWindowBuilder, command};
 use rand::prelude::IteratorRandom;
 
 /// Shared state for the app
@@ -230,6 +230,9 @@ fn open_url(url: String) -> Result<(), String> {
     open::that(&url).map_err(|e| format!("Failed to open URL: {}", e))
 }
 
+#[cfg(dev)]
+static DEFAULT_PI_WEB_URL: &str = "http://localhost:8505";
+#[cfg(not(dev))]
 static DEFAULT_PI_WEB_URL: &str = "http://localhost:8504";
 
 /// Run the Tauri app
@@ -239,17 +242,22 @@ pub fn run() {
             let pi_web_url = std::env::var("PI_WEB_URL")
                 .unwrap_or_else(|_| DEFAULT_PI_WEB_URL.to_string());
 
-            if let Some(window) = app.get_webview_window("main") {
-                match url::Url::parse(&pi_web_url) {
-                    Ok(parsed_url) => {
-                        log::info!("Navigating to PI WEB server: {}", parsed_url);
-                        let _ = window.navigate(parsed_url);
-                    }
-                    Err(e) => {
-                        log::error!("Invalid PI_WEB_URL '{}': {}", pi_web_url, e);
-                    }
-                }
-            }
+            let url = url::Url::parse(&pi_web_url)
+                .unwrap_or_else(|e| {
+                    log::error!("Invalid PI_WEB_URL '{}': {}, using default", pi_web_url, e);
+                    url::Url::parse(DEFAULT_PI_WEB_URL).expect("invalid default URL")
+                });
+
+            log::info!("Loading PI WEB from: {}", url);
+
+            WebviewWindowBuilder::new(app, "main", WebviewUrl::External(url))
+                .title("PI WEB")
+                .inner_size(1200.0, 800.0)
+                .min_inner_size(800.0, 600.0)
+                .resizable(true)
+                .fullscreen(false)
+                .build()
+                .expect("failed to create main window");
 
             let state = AppState::new();
             app.manage(state);

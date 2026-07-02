@@ -10,17 +10,7 @@
     "beforeBuildCommand": "cd ../pi-web-New-UI-/ && npm run build"
   },
   "app": {
-    "windows": [
-      {
-        "title": "PI WEB",
-        "width": 1200,
-        "height": 800,
-        "resizable": true,
-        "fullscreen": false,
-        "minWidth": 800,
-        "minHeight": 600
-      }
-    ],
+    "windows": [],
     "security": {
       "csp": null
     }
