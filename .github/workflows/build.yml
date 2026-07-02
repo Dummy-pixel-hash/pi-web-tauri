@@ -10,8 +10,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-x64:
     runs-on: windows-latest
+    name: Build for Windows x64
 
     steps:
       - name: Checkout Tauri wrapper
@@ -45,13 +46,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Tauri app
+      - name: Build Tauri app (x64)
         run: npm run tauri:build
 
-      - name: Upload Windows installer
+      - name: Upload Windows x64 installer
         uses: actions/upload-artifact@v4
         with:
-          name: PI-WEB-Windows-Installer
+          name: PI-WEB-Windows-x64-Installer
           path: src-tauri/target/release/bundle/nsis/*.exe
 
       - name: Upload to release (on release)
@@ -59,5 +60,58 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: src-tauri/target/release/bundle/nsis/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-arm64:
+    runs-on: windows-latest
+    name: Build for Windows ARM64
+
+    steps:
+      - name: Checkout Tauri wrapper
+        uses: actions/checkout@v4
+
+      - name: Clone PI WEB
+        run: |
+          git clone https://github.com/jmfederico/pi-web.git ../pi-web-New-UI-
+          cd ../pi-web-New-UI-
+          npm install
+
+      - name: Build PI WEB
+        run: |
+          cd ../pi-web-New-UI-
+          npm run build
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Windows C++ Build Tools
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Tauri CLI
+        run: npm install -g @tauri-apps/cli
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Tauri app (ARM64)
+        run: npm run tauri:build -- --target aarch64-pc-windows-msvc
+
+      - name: Upload Windows ARM64 installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: PI-WEB-Windows-ARM64-Installer
+          path: src-tauri/target/aarch64-pc-windows-msvc/release/bundle/nsis/*.exe
+
+      - name: Upload to release (on release)
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: src-tauri/target/aarch64-pc-windows-msvc/release/bundle/nsis/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
