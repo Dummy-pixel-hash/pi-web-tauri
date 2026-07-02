@@ -235,7 +235,7 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             let state = AppState::new();
-            app.manage(tauri::State::new(Mutex::new(state)));
+            app.manage(state);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
