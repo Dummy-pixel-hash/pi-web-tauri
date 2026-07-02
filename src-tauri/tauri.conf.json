@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "identifier": "com.pi-web.desktop",
   "build": {
-    "frontendDist": "../pi-web-New-UI-/dist",
+    "frontendDist": "../../pi-web-New-UI-/dist",
     "beforeDevCommand": "cd ../pi-web-New-UI-/ && npm run dev:client",
     "beforeBuildCommand": "cd ../pi-web-New-UI-/ && npm run build"
   },
