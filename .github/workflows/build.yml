@@ -23,10 +23,6 @@ jobs:
           git clone https://github.com/jmfederico/pi-web.git ../pi-web-New-UI-
           cd ../pi-web-New-UI-
           npm install
-
-      - name: Build PI WEB
-        run: |
-          cd ../pi-web-New-UI-
           npm run build
 
       - name: Setup Node.js
@@ -76,10 +72,6 @@ jobs:
           git clone https://github.com/jmfederico/pi-web.git ../pi-web-New-UI-
           cd ../pi-web-New-UI-
           npm install
-
-      - name: Build PI WEB
-        run: |
-          cd ../pi-web-New-UI-
           npm run build
 
       - name: Setup Node.js
@@ -89,6 +81,8 @@ jobs:
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-pc-windows-msvc
 
       - name: Install Windows C++ Build Tools
         uses: ilammy/msvc-dev-cmd@v1
