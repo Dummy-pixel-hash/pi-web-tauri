@@ -1,0 +1,20 @@
+{
+  "name": "pi-web-tauri",
+  "version": "0.1.0",
+  "description": "PI WEB Desktop Application - Tauri wrapper",
+  "author": {
+    "name": "PI WEB Team"
+  },
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:dev:windows": "tauri dev --target x86_64-pc-windows-msvc",
+    "tauri:build:windows": "tauri build --target x86_64-pc-windows-msvc"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}
