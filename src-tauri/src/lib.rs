@@ -52,7 +52,7 @@ fn start_server(app_state: State<Mutex<AppState>>) -> Result<String, String> {
     let child = cmd.spawn().map_err(|e| format!("Failed to start server: {}", e))?;
 
     drop(state);
-    let mut state = app_state.lock().map_err(|e| e.to_string())?;
+    let state = app_state.lock().map_err(|e| e.to_string())?;
     *state.server_process.lock().unwrap() = Some(child);
     *state.server_port.lock().unwrap() = Some(port);
 
