@@ -56,7 +56,7 @@ This will:
 
 ### Option 1: GitHub Actions (No Windows machine needed!)
 
-Push your code to GitHub and the workflow will automatically build the app:
+Push your code to GitHub and the workflow will automatically build the app for both **x64** and **ARM64**:
 
 1. Push to GitHub: `git push origin main`
 2. Go to **Actions** tab in your GitHub repo
@@ -69,8 +69,11 @@ Push your code to GitHub and the workflow will automatically build the app:
 ### Option 2: Local Build (Windows)
 
 ```bash
-# Build for Windows (x64)
-npm run tauri:build:windows
+# Build for Windows x64
+npm run tauri:build:x64
+
+# Build for Windows ARM64 (Surface, Snapdragon)
+npm run tauri:build:arm64
 
 # Build for all platforms
 npm run tauri:build
@@ -78,7 +81,8 @@ npm run tauri:build
 
 ### Output locations
 
-- **NSIS Installer**: `src-tauri/target/release/bundle/nsis/PI WEB_0.1.0_x64-setup.exe`
+- **x64 NSIS Installer**: `src-tauri/target/release/bundle/nsis/PI WEB_0.1.0_x64-setup.exe`
+- **ARM64 NSIS Installer**: `src-tauri/target/aarch64-pc-windows-msvc/release/bundle/nsis/PI WEB_0.1.0_arm64-setup.exe`
 - **MSI Installer**: `src-tauri/target/release/bundle/msi/PI WEB_0.1.0_x64.msi`
 - **Portable**: `src-tauri/target/release/bundle/app/`
 
