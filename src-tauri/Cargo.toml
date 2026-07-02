@@ -30,6 +30,7 @@ log = "0.4"
 rand = "0.8"
 dirs = "6"
 open = "5"
+url = "2"
 which = "7"
 
 [profile.release]

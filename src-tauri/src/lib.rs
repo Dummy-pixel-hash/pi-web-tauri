@@ -230,10 +230,27 @@ fn open_url(url: String) -> Result<(), String> {
     open::that(&url).map_err(|e| format!("Failed to open URL: {}", e))
 }
 
+static DEFAULT_PI_WEB_URL: &str = "http://localhost:8504";
+
 /// Run the Tauri app
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
+            let pi_web_url = std::env::var("PI_WEB_URL")
+                .unwrap_or_else(|_| DEFAULT_PI_WEB_URL.to_string());
+
+            if let Some(window) = app.get_webview_window("main") {
+                match url::Url::parse(&pi_web_url) {
+                    Ok(parsed_url) => {
+                        log::info!("Navigating to PI WEB server: {}", parsed_url);
+                        let _ = window.navigate(parsed_url);
+                    }
+                    Err(e) => {
+                        log::error!("Invalid PI_WEB_URL '{}': {}", pi_web_url, e);
+                    }
+                }
+            }
+
             let state = AppState::new();
             app.manage(state);
             Ok(())
